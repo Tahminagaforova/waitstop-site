@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WaitStop</title>
+<meta name="description" content="WaitStop is a voice journaling app for iOS. It gives you room to say your thoughts out loud, then hands them back as writing, with a reflection that mirrors what you said so you can examine it. Built by WaitStop Software Company LLC.">
+
+<meta property="og:title" content="WaitStop — voice journaling for iOS">
+<meta property="og:description" content="Speak it, then examine it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://waitstop.app">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --cream:      #FAF8F2;
+    --sage:       #5E6B54;
+    --deep-sage:  #3F4A38;
+    --clay:       #A66A48;
+    --deep-clay:  #8A5334;
+    --ink:        #232821;
+    --muted:      #5C6356;
+    --hairline:   #DDD9CD;
+
+    --serif: "Spectral", Georgia, serif;
+    --sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  header {
+    padding: 56px 0 0;
+  }
+
+  .masthead {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 18px;
+  }
+
+  .wordmark {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    color: var(--deep-sage);
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .descriptor {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+    padding-bottom: 1px;
+  }
+
+  main {
+    flex: 1 0 auto;
+    padding: 72px 0 96px;
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(32px, 5.6vw, 46px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    margin: 0 0 30px;
+    max-width: 22ch;
+  }
+
+  .lede {
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--muted);
+    margin: 0 0 22px;
+    max-width: 48ch;
+  }
+
+  .lede:last-of-type {
+    margin-bottom: 42px;
+  }
+
+  .arc {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 16px;
+    color: var(--sage);
+    margin: 0 0 44px;
+  }
+
+  .arc span { white-space: nowrap; }
+
+  .arc i {
+    flex: 1;
+    height: 1px;
+    background: var(--hairline);
+    font-style: normal;
+    transform: translateY(-4px);
+  }
+
+  .status {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+    padding-top: 4px;
+  }
+
+  .status strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .status a {
+    color: var(--sage);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 1px;
+  }
+
+  .status a:hover,
+  .status a:focus-visible {
+    color: var(--deep-clay);
+    border-bottom-color: var(--deep-clay);
+  }
+
+  footer {
+    flex-shrink: 0;
+    border-top: 1px solid var(--hairline);
+    padding: 36px 0 56px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: var(--muted);
+  }
+
+  .entity {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  address {
+    font-style: normal;
+    margin: 0;
+  }
+
+  footer a {
+    color: var(--deep-sage);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hairline);
+    padding-bottom: 1px;
+  }
+
+  footer a:hover,
+  footer a:focus-visible {
+    border-bottom-color: var(--deep-clay);
+    color: var(--deep-clay);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--deep-clay);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .copyright {
+    margin: 22px 0 0;
+    font-size: 12.5px;
+    color: #8B9184;
+  }
+
+  @media (max-width: 520px) {
+    header { padding-top: 40px; }
+    main   { padding: 52px 0 72px; }
+    .arc   { font-size: 15px; gap: 10px; }
+
+    .masthead {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      padding-bottom: 16px;
+    }
+
+    .descriptor { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="masthead">
+      <p class="wordmark">WaitStop</p>
+      <p class="descriptor">Voice journaling for iOS</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <h1>Speak it, then examine it.</h1>
+
+    <p class="lede">
+      WaitStop is a voice journaling app for iOS. It gives you room to
+      say your thoughts out loud, for as long as you need to, and then
+      hands them back as writing. Each entry comes with a reflection
+      that mirrors what you said, so you can examine it rather than
+      just carry it.
+    </p>
+
+    <p class="lede">
+      It does not advise you, score you, or tell you what to do. Your
+      audio is never stored on our servers.
+    </p>
+
+    <p class="arc">
+      <span>Examine.</span><span>Ground.</span><span>Become.</span><i></i>
+    </p>
+
+    <p class="status">
+      <strong>Coming to the App&nbsp;Store.</strong>
+      For questions, write to us at
+      <a href="mailto:support@waitstop.app">support@waitstop.app</a>.
+    </p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <address>
+      <span class="entity">WaitStop Software Company LLC</span><br>
+      8336 E Cactus Wren Rd<br>
+      Scottsdale, AZ 85250<br>
+      United States<br>
+      <a href="mailto:tahmina@waitstop.app">tahmina@waitstop.app</a>
+    </address>
+
+    <p class="copyright">
+      &copy; 2026 WaitStop Software Company LLC. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
