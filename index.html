@@ -3,278 +3,522 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>WaitStop</title>
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="description" content="WaitStop is an AI-enabled voice journaling app for iOS. It gives you room to say your thoughts out loud, then hands them back as writing, with a reflection that mirrors what you said so you can examine it. Built by WaitStop Software Company LLC.">
-
-<meta property="og:title" content="WaitStop — AI-enabled voice journaling for iOS">
-<meta property="og:description" content="Speak it, then examine it.">
+<title>WaitStop · a body image journal you talk to</title>
+<meta name="description" content="WaitStop is a voice journal for people examining their relationship with food, their body, and themselves. It reflects what you actually said and asks one question at a time.">
+<meta property="og:title" content="WaitStop · a body image journal you talk to">
+<meta property="og:description" content="Examine with radical honesty. Know yourself. Grow through self agency.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://waitstop.app">
-
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;1,300&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream:      #FAF8F2;
-    --sage:       #5E6B54;
-    --deep-sage:  #3F4A38;
-    --clay:       #A66A48;
-    --deep-clay:  #8A5334;
-    --ink:        #232821;
-    --muted:      #5C6356;
-    --hairline:   #DDD9CD;
+:root{
+  /* lifted from lib/theme.ts */
+  --paper:#EDE4CF;
+  --card:#FBF7EE;
+  --sage:#556B4A;
+  --sage-deep:#47593C;
+  --sage-soft:#DCE4D2;
+  --sage-light:#8B9E7B;
+  --sage-accent:#5C7A58;
+  --sage-eyebrow:#3F5A3E;
+  --sage-wash:rgba(85,107,74,.06);
+  --sage-text:#33402F;
+  --transcript:#E4EADB;
+  --clay:#B07F4E;
+  --clay-soft:#E6D9BE;
+  --espresso:#6B4E36;
+  --espresso-text:#3E2C1D;
+  --chip:#F3EDE2;
+  --ink:#3A4434;
+  --body:#3F443A;
+  --body-soft:#6E6A5A;
+  --muted:#8C8775;
+  --tagline:#6E7A5E;
+  --rule:#E4DBC8;
+  --on-sage:#F3EEE0;
+  /* fonts */
+  --serif:"Spectral",Georgia,serif;
+  --sans:"Inter",system-ui,-apple-system,sans-serif;
+  --mark:"Fraunces",Georgia,serif;
+  --lift:0 2px 8px rgba(138,106,74,.06);
+  --wrap:1120px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--body);
+  font-family:var(--sans);font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px}
+a{color:inherit}
+img{max-width:100%;display:block}
 
-    --serif: "Spectral", Georgia, serif;
-    --sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  }
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--ink);margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(40px,5.6vw,64px);line-height:1.1}
+h2{font-size:clamp(28px,3.4vw,38px);line-height:1.22}
+h3{font-size:20px;line-height:1.35}
+p{margin:0 0 18px}
+.lede{font-size:clamp(17px,1.6vw,19px);line-height:1.62;color:var(--body-soft);max-width:36em}
+.eyebrow{
+  font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--muted);margin:0 0 18px;
+}
+.eyebrow.sage{color:var(--sage-eyebrow)}
+.eyebrow.clay{color:var(--clay)}
+.script{font-family:var(--serif);font-style:italic;color:var(--tagline)}
 
-  *, *::before, *::after { box-sizing: border-box; }
+/* nav */
+nav{position:sticky;top:0;z-index:30;background:rgba(237,228,207,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:70px}
+.brand{display:flex;align-items:baseline;gap:12px;text-decoration:none}
+.brand b{font-family:var(--mark);font-weight:700;font-size:23px;color:var(--ink);letter-spacing:-.01em}
+.brand span{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted)}
+.navlinks{display:flex;gap:28px;font-size:14px}
+.navlinks a{color:var(--body-soft);text-decoration:none;transition:color .18s}
+.navlinks a:hover{color:var(--sage)}
 
-  html { -webkit-text-size-adjust: 100%; }
+/* hero */
+header{padding:80px 0 0}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center}
+.tagline{margin:30px 0 26px;font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.75;color:var(--tagline)}
+.tagline span{display:block}
+.tagline .rule{display:block;width:44px;height:1px;background:var(--rule);margin:18px 0 0}
+.cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:32px}
+.cta{
+  display:inline-flex;align-items:center;background:var(--sage);color:var(--on-sage);
+  padding:15px 28px;border-radius:12px;font-weight:500;font-size:15px;text-decoration:none;
+}
+.cta-soon{background:transparent;color:var(--sage-deep);border:1.5px solid var(--sage);cursor:default}
+.cta-note{font-size:13px;color:var(--muted)}
 
-  body {
-    margin: 0;
-    background: var(--cream);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+/* phone */
+.phone{
+  border-radius:34px;overflow:hidden;border:1px solid var(--rule);
+  box-shadow:0 16px 40px rgba(138,106,74,.13);background:var(--paper);
+  max-width:300px;margin:0 auto;
+}
+.phone img{width:100%;height:600px;object-fit:cover;object-position:top center}
+.phone.tall img{height:640px}
+.reel{margin:0;border-radius:24px;overflow:hidden;border:1px solid var(--rule);
+  box-shadow:0 16px 40px rgba(138,106,74,.13);background:var(--paper);max-width:380px;margin:0 auto}
+.reel video{display:block;width:100%;height:auto}
+/* how it works, one row */
+.reel-row{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;align-items:end}
+.rs{
+  appearance:none;border:0;background:none;padding:0;cursor:pointer;position:relative;
+  border-radius:22px;overflow:hidden;display:block;
+  border:1px solid var(--rule);background:var(--paper);
+  transform:translateY(10px) scale(.94);opacity:.5;
+  transition:transform .55s cubic-bezier(.22,.7,.3,1),opacity .55s ease,box-shadow .55s ease;
+  box-shadow:0 4px 14px rgba(138,106,74,.07);
+}
+.rs img{width:100%;height:400px;object-fit:cover;object-position:top center;display:block}
+.rs-n{
+  position:absolute;top:12px;left:14px;z-index:2;
+  font-size:11px;font-weight:500;letter-spacing:1.4px;color:var(--muted);
+  background:rgba(251,247,238,.86);border-radius:9999px;padding:4px 10px;
+}
+.rs.is-on{transform:translateY(0) scale(1);opacity:1;box-shadow:0 18px 42px rgba(138,106,74,.16)}
+.rs.is-on .rs-n{color:var(--sage-deep);background:var(--sage-soft)}
+.rs-cap{margin-top:36px;max-width:34em;min-height:96px}
+.rs-cap h3{font-size:24px;margin-bottom:10px}
+.rs-cap p{color:var(--body-soft);margin:0;font-size:16.5px}
+@media(max-width:940px){
+  .reel-row{grid-template-columns:repeat(2,1fr);gap:16px}
+  .rs img{height:300px}
+  .rs-cap{min-height:132px}
+}
+@media(prefers-reduced-motion:reduce){.rs{transition:none}}
 
-  .wrap {
-    width: 100%;
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 0 28px;
-  }
+.gallery .phone img{height:400px}
 
-  header {
-    padding: 56px 0 0;
-  }
+/* sections */
+section{padding:84px 0;border-top:1px solid var(--rule);margin-top:0}
+.sec-head{max-width:32em;margin-bottom:44px}
+.sec-head p{margin-top:18px}
 
-  .masthead {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    border-bottom: 1px solid var(--hairline);
-    padding-bottom: 18px;
-  }
+/* the position statement */
+.position{background:var(--sage);color:var(--on-sage);border-top:none;margin-top:84px;padding:76px 0}
+.position + section{border-top:none;margin-top:0}
+.position h2{color:var(--on-sage);max-width:19em}
+.position p{color:rgba(243,238,224,.82);max-width:34em;font-size:18px;line-height:1.65}
+.position .eyebrow{color:rgba(243,238,224,.6)}
 
-  .wordmark {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: 22px;
-    letter-spacing: 0.02em;
-    color: var(--deep-sage);
-    margin: 0;
-    flex-shrink: 0;
-  }
+/* threefold */
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
+.tcard{background:var(--card);border-radius:16px;padding:34px 30px;box-shadow:var(--lift)}
+.tcard .n{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--sage-light);display:block;margin-bottom:14px}
+.tcard h3{margin-bottom:14px}
+.tcard p{color:var(--body-soft);font-size:15.5px;line-height:1.62;margin:0}
+.tcard .line{font-family:var(--serif);font-style:italic;color:var(--tagline);font-size:15px;margin-top:16px;display:block}
 
-  .descriptor {
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0;
-    padding-bottom: 1px;
-  }
+/* steps with screens */
+.step{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:96px}
+.step:nth-child(even) .step-media{order:-1}
+.step:last-child{margin-bottom:0}
+.step-num{
+  font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:1.5px;
+  color:var(--clay);display:block;margin-bottom:16px;
+}
+.step h3{margin-bottom:14px;font-size:24px}
+.step p{color:var(--body-soft);margin:0;font-size:16.5px}
 
-  main {
-    flex: 1 0 auto;
-    padding: 72px 0 96px;
-  }
+/* reflection specimen, built to the app's own card rules */
+.specimen{max-width:640px}
+.refl{
+  background:var(--sage-wash);border-left:3px solid var(--sage-accent);
+  border-radius:0;padding:28px 30px;margin-bottom:0;
+}
+.refl .eyebrow{margin-bottom:16px}
+.refl p{font-family:var(--serif);font-size:18px;line-height:1.62;color:var(--sage-text);margin:0}
+.qchip{
+  background:var(--chip);border:1.5px solid var(--espresso);border-radius:12px;
+  padding:20px 22px;margin-top:22px;
+}
+.qchip p{font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.55;color:var(--espresso-text);margin:0}
+.userwords{
+  background:var(--card);border-radius:14px;padding:24px 26px;margin-bottom:20px;box-shadow:var(--lift);
+}
+.userwords .who{font-size:13px;color:var(--muted);margin-bottom:10px}
+.userwords p{font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--body);margin:0}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:34px}
+.other{border:1px dashed var(--rule);border-radius:14px;padding:24px 26px;background:transparent}
+.other .who{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.other p{color:var(--muted);font-size:16px;margin:0}
 
-  h1 {
-    font-family: var(--serif);
-    font-weight: 300;
-    font-size: clamp(32px, 5.6vw, 46px);
-    line-height: 1.25;
-    letter-spacing: -0.015em;
-    margin: 0 0 30px;
-    max-width: 22ch;
-  }
+/* keep grid */
+.keep{display:grid;grid-template-columns:repeat(2,1fr);gap:0 60px}
+.keep div{padding:26px 0;border-top:1px solid var(--rule)}
+.keep h3{font-size:18px;margin-bottom:8px}
+.keep p{color:var(--body-soft);font-size:15.5px;margin:0}
 
-  .lede {
-    font-size: 17px;
-    line-height: 1.75;
-    color: var(--muted);
-    margin: 0 0 22px;
-    max-width: 48ch;
-  }
+/* not */
+.not{max-width:none;columns:2;column-gap:56px}
+.not ul{margin:0;padding:0;border-top:1px solid var(--rule)}
+.not li{list-style:none;padding:18px 0;border-bottom:1px solid var(--rule);font-size:16.5px;color:var(--body);break-inside:avoid}
 
-  .lede:last-of-type {
-    margin-bottom: 42px;
-  }
+/* gallery */
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;align-items:start}
+.gallery figure{margin:0}
+.gallery figcaption{font-size:14px;color:var(--muted);margin-top:14px;text-align:center}
 
-  .arc {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 300;
-    font-size: 16px;
-    color: var(--sage);
-    margin: 0 0 44px;
-  }
+/* pricing */
+.prices{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:32px}
+.plan{background:var(--card);border:1.5px solid var(--rule);border-radius:16px;padding:28px 32px;min-width:210px;box-shadow:var(--lift)}
+.plan.pick{border-color:var(--sage)}
+.plan .amt{font-family:var(--serif);font-size:34px;font-weight:600;color:var(--ink);display:block;line-height:1.1}
+.plan .per{font-size:13px;color:var(--muted);margin-top:8px;display:block}
+.plan .save{display:inline-block;background:var(--sage-soft);color:var(--sage-deep);font-size:12px;font-weight:500;padding:4px 10px;border-radius:9999px;margin-bottom:12px}
 
-  .arc span { white-space: nowrap; }
+/* footer */
+footer{border-top:1px solid var(--rule);padding:56px 0 52px;margin-top:0}
+.foot{display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap}
+.foot address{font-style:normal;font-size:14px;line-height:1.8;color:var(--muted)}
+.foot a{color:var(--body-soft);text-decoration:none}
+.foot a:hover{color:var(--sage)}
+.footlinks{display:flex;flex-direction:column;gap:12px;font-size:14px}
+.copy{margin-top:44px;font-size:12.5px;color:var(--muted)}
 
-  .arc i {
-    flex: 1;
-    height: 1px;
-    background: var(--hairline);
-    font-style: normal;
-    transform: translateY(-4px);
-  }
-
-  .status {
-    font-size: 14px;
-    color: var(--muted);
-    margin: 0;
-    padding-top: 4px;
-  }
-
-  .status strong {
-    font-weight: 500;
-    color: var(--ink);
-  }
-
-  .status a {
-    color: var(--sage);
-    text-decoration: none;
-    border-bottom: 1px solid var(--hairline);
-    padding-bottom: 1px;
-  }
-
-  .status a:hover,
-  .status a:focus-visible {
-    color: var(--deep-clay);
-    border-bottom-color: var(--deep-clay);
-  }
-
-  footer {
-    flex-shrink: 0;
-    border-top: 1px solid var(--hairline);
-    padding: 36px 0 56px;
-    font-size: 13.5px;
-    line-height: 1.75;
-    color: var(--muted);
-  }
-
-  .entity {
-    font-weight: 500;
-    color: var(--ink);
-  }
-
-  address {
-    font-style: normal;
-    margin: 0;
-  }
-
-  footer a {
-    color: var(--deep-sage);
-    text-decoration: none;
-    border-bottom: 1px solid var(--hairline);
-    padding-bottom: 1px;
-  }
-
-  footer a:hover,
-  footer a:focus-visible {
-    border-bottom-color: var(--deep-clay);
-    color: var(--deep-clay);
-  }
-
-  :focus-visible {
-    outline: 2px solid var(--deep-clay);
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
-
-  .copyright {
-    margin: 22px 0 0;
-    font-size: 12.5px;
-    color: #8B9184;
-  }
-
-  @media (max-width: 520px) {
-    header { padding-top: 40px; }
-    main   { padding: 52px 0 72px; }
-    .arc   { font-size: 15px; gap: 10px; }
-
-    .masthead {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
-      padding-bottom: 16px;
-    }
-
-    .descriptor { font-size: 12px; }
-  }
+@media(max-width:940px){
+  .hero,.step,.compare{grid-template-columns:1fr;gap:44px}
+  .step:nth-child(even) .step-media{order:0}
+  .three,.gallery{grid-template-columns:1fr}
+  .keep{grid-template-columns:1fr}
+  section{padding:60px 0;margin-top:0}
+  .not{columns:1}
+  .position{padding:64px 0}
+  header{padding:56px 0 0}
+  .wrap{padding:0 24px}
+}
+:focus-visible{outline:2px solid var(--sage);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 
-<header>
+<nav>
   <div class="wrap">
-    <div class="masthead">
-      <p class="wordmark">WaitStop</p>
-      <p class="descriptor">Voice journaling for iOS</p>
+    <a class="brand" href="/"><b>WaitStop</b><span>Body image journal</span></a>
+    <div class="navlinks">
+      <a href="#how">How it works</a>
+      <a href="#philosophy">Philosophy</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow">Voice journaling for iOS</p>
+      <h1>Speak it,<br>then examine it.</h1>
+      <div class="tagline">
+        <span>Examine with radical honesty.</span>
+        <span>Know yourself.</span>
+        <span>Grow through self agency.</span>
+        <span class="rule"></span>
+      </div>
+      <p class="lede">WaitStop is a journal you talk to, for people examining their relationship with food, their body, and themselves. Say what you are actually thinking, for as long as you need to. Your words come back as writing, with a reflection drawn from what you said and one question to answer.</p>
+      <div class="cta-row">
+        <span class="cta cta-soon">Coming soon to the App Store</span>
+        <span class="cta-note">iPhone · Free trial at launch</span>
+      </div>
+    </div>
+    <div class="step-media">
+      <figure class="reel">
+        <video autoplay muted loop playsinline preload="metadata" poster="img/hero-poster.jpg"
+               aria-label="Someone speaking an entry into their phone, cut with the WaitStop screens that transcribe it and answer with a question">
+          <source src="img/hero.webm" type="video/webm">
+          <source src="img/hero.mp4" type="video/mp4">
+        </video>
+      </figure>
     </div>
   </div>
 </header>
 
-<main>
+<div class="position">
   <div class="wrap">
-    <h1>Speak it, then examine it.</h1>
-
-    <p class="lede">
-      WaitStop is an AI-enabled voice journaling app for iOS. It gives you room to
-      say your thoughts out loud, for as long as you need to, and then
-      hands them back as writing. Each entry comes with a reflection
-      that mirrors what you said, so you can examine it rather than
-      just carry it.
-    </p>
-
-    <p class="lede">
-      It does not advise you, score you, or tell you what to do. Your
-      audio is never stored on our servers.
-    </p>
-
-    <p class="arc">
-      <span>Examine.</span><span>Ground.</span><span>Become.</span><i></i>
-    </p>
-
-    <p class="status">
-      <strong>Coming to the App&nbsp;Store.</strong>
-      For questions, write to us at
-      <a href="mailto:support@waitstop.app">support@waitstop.app</a>.
-    </p>
+    <p class="eyebrow">The difference</p>
+    <h2>WaitStop is not a generic wellness app that validates your feelings.</h2>
+    <p>The engine is built to lead you through radical honesty. It reads what you actually said, reflects it back so you can see it, and asks one question that goes further in. What you do with the answer is yours. Growth here comes from your own agency.</p>
   </div>
-</main>
+</div>
+
+<section id="philosophy">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow sage">The framework</p>
+      <h2>Three movements, and you can be in more than one at a time.</h2>
+      <p class="lede">Every entry meets you where you are on the arc. Nothing pushes you forward.</p>
+    </div>
+    <div class="three">
+      <div class="tcard">
+        <span class="n">i</span>
+        <h3>Examine</h3>
+        <p>Look honestly at your relationship with food, body, eating, self image. Including the inherited beliefs, family patterns, cultural pressures, and biographical specifics that shaped where you are now. Adult curiosity about your own formation.</p>
+        <span class="line">Examine with radical honesty.</span>
+      </div>
+      <div class="tcard">
+        <span class="n">ii</span>
+        <h3>Ground</h3>
+        <p>Arrive at compassion through honest seeing rather than as a summoned feeling. Self acceptance as the foundation for what comes next. Compassion is the floor here, and most apps mistake it for the ceiling.</p>
+        <span class="line">Know yourself.</span>
+      </div>
+      <div class="tcard">
+        <span class="n">iii</span>
+        <h3>Become</h3>
+        <p>Take responsibility for who you become. Author a direction on your own terms. Move past the version of yourself that the acceptance work helped you accept, in whichever direction you choose.</p>
+        <span class="line">Grow through self agency.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow clay">One entry, two ways of answering it</p>
+      <h2>Agreement is the easiest thing an app can hand you.</h2>
+    </div>
+    <div class="specimen">
+      <div class="userwords">
+        <div class="who">Your words</div>
+        <p>So today, I went shopping for clothes. And I tried on five things today and hated all of them. Not the clothes, but how I look in them. And I've been feeling this way for years now.</p>
+      </div>
+      <div class="refl">
+        <p class="eyebrow sage">Reflection</p>
+        <p>Five items, five moments of the same feeling. What you're describing isn't really about the clothes, and you know that. It's something you've been carrying for years, and the fitting room just keeps handing it back to you.</p>
+        <div class="qchip">
+          <p>When you say you hate how you look, whose standard are you measuring yourself against?</p>
+        </div>
+      </div>
+      <div class="compare">
+        <div class="other">
+          <div class="who">What a supportive app says</div>
+          <p>You are being so hard on yourself. Your body does so much for you. Be kind to yourself today.</p>
+        </div>
+        <div class="other" style="border-style:solid;border-color:var(--sage);background:var(--card)">
+          <div class="who" style="color:var(--sage-eyebrow)">What WaitStop does</div>
+          <p style="color:var(--body)">Uses your own words, names the pattern you described, and hands you a question you can answer out loud.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow clay">How it works</p>
+      <h2>Four steps, and you can stop at any of them.</h2>
+    </div>
+
+    <div class="reel-row" id="steps">
+      <button class="rs is-on" data-i="0" aria-label="Step 1, Speak">
+        <span class="rs-n">01</span>
+        <img src="img/Screen_1.jpg" alt="The WaitStop home screen with the record control" width="680" height="1474">
+      </button>
+      <button class="rs" data-i="1" aria-label="Step 2, Read your own words">
+        <span class="rs-n">02</span>
+        <img src="img/screen_3.jpg" alt="The transcript shown for review before it is saved" width="680" height="1474" loading="lazy">
+      </button>
+      <button class="rs" data-i="2" aria-label="Step 3, Read the reflection">
+        <span class="rs-n">03</span>
+        <img src="img/screen_6.jpg" alt="A reflection ending with a single question" width="680" height="1474" loading="lazy">
+      </button>
+      <button class="rs" data-i="3" aria-label="Step 4, Answer or leave it">
+        <span class="rs-n">04</span>
+        <img src="img/screen_9.jpg" alt="A continued conversation after the question is answered" width="680" height="1474" loading="lazy">
+      </button>
+    </div>
+
+    <div class="rs-cap" id="cap" aria-live="polite">
+      <h3 id="cap-t">Speak</h3>
+      <p id="cap-p">Open the app and talk. No prompt to answer, no timer, no minimum. Say the thing you would say to nobody.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow sage">Your journal</p>
+      <h2>Everything you say stays yours.</h2>
+    </div>
+    <div class="gallery">
+      <figure>
+        <div class="phone"><img src="img/screen_11.jpg" alt="The journal archive, with entries grouped by week and month" width="680" height="1474" loading="lazy"></div>
+        <figcaption>Every entry, kept and readable</figcaption>
+      </figure>
+      <figure>
+        <div class="phone"><img src="img/screen_12.jpg" alt="A weekly recap describing what ran through the week" width="680" height="1474" loading="lazy"></div>
+        <figcaption>Weekly and monthly recaps</figcaption>
+      </figure>
+      <figure>
+        <div class="phone"><img src="img/screen_5.jpg" alt="The app processing a finished entry" width="680" height="1474" loading="lazy"></div>
+        <figcaption>A moment with your words</figcaption>
+      </figure>
+    </div>
+    <div class="keep" style="margin-top:64px">
+      <div>
+        <h3>Your audio is never stored</h3>
+        <p>Recordings are transcribed and discarded. Nothing you say is kept as audio on our servers.</p>
+      </div>
+      <div>
+        <h3>Delete anything, any time</h3>
+        <p>Any entry, or your whole account. Deletion is a right rather than a setting we hide.</p>
+      </div>
+      <div>
+        <h3>Read your journal without a subscription</h3>
+        <p>If your subscription ends, your existing entries stay readable.</p>
+      </div>
+      <div>
+        <h3>No scores, no streaks</h3>
+        <p>Nothing counts your days or grades your entries. There is no progress bar on knowing yourself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow clay">Be clear about this</p>
+      <h2>What WaitStop is not.</h2>
+    </div>
+    <div class="not">
+      <ul>
+        <li>It is not therapy, and it is not a substitute for care from a professional.</li>
+        <li>It does not diagnose anything and it does not treat anything.</li>
+        <li>It does not score your entries or track how you are doing.</li>
+        <li>It is a journal. The value is in what you say and in reading it back.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow sage">Pricing</p>
+      <h2>Start with a free trial.</h2>
+    </div>
+    <div class="prices">
+      <div class="plan pick">
+        <span class="save">Save 50%</span>
+        <span class="amt">$59.99</span>
+        <span class="per">per year</span>
+      </div>
+      <div class="plan">
+        <span class="amt">$9.99</span>
+        <span class="per">per month</span>
+      </div>
+    </div>
+    <div class="cta-row">
+      <span class="cta cta-soon">Coming soon to the App Store</span>
+      <span class="cta-note">Cancel any time in your Apple account</span>
+    </div>
+  </div>
+</section>
 
 <footer>
   <div class="wrap">
-    <address>
-      <span class="entity">WaitStop Software Company LLC</span><br>
-      8336 E Cactus Wren Rd<br>
-      Scottsdale, AZ 85250<br>
-      United States<br>
-      <a href="mailto:tahmina@waitstop.app">tahmina@waitstop.app</a>
-    </address>
-
-    <p class="copyright">
-      &copy; 2026 WaitStop Software Company LLC. All rights reserved.
-    </p>
+    <div class="foot">
+      <address>
+        WaitStop Software Company LLC<br>
+        8336 E Cactus Wren Rd<br>
+        Scottsdale, AZ 85250<br>
+        United States<br>
+        <a href="mailto:support@waitstop.app">support@waitstop.app</a>
+      </address>
+      <div class="footlinks">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Use</a>
+        <a href="mailto:support@waitstop.app">Contact</a>
+      </div>
+    </div>
+    <p class="copy">© 2026 WaitStop Software Company LLC. All rights reserved.</p>
   </div>
 </footer>
 
+<script>
+(function(){
+  var copy=[
+    ["Speak","Open the app and talk. No prompt to answer, no timer, no minimum. Say the thing you would say to nobody."],
+    ["Read your own words","Your entry is transcribed as you speak. You see the transcript, fix anything the transcription got wrong, and decide whether to keep it before it is saved."],
+    ["Read the reflection","A short reflection draws on what you actually said and ends with one question. One at a time, so a conversation goes deeper rather than wider."],
+    ["Answer, or leave it","Speak your answer and the conversation continues from there. Or close it and come back. The entry is yours either way."]
+  ];
+  var row=document.getElementById('steps'); if(!row) return;
+  var cards=[].slice.call(row.querySelectorAll('.rs'));
+  var t=document.getElementById('cap-t'), p=document.getElementById('cap-p');
+  var i=0, timer=null, paused=false;
+  var still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function show(n){
+    i=n;
+    cards.forEach(function(c,k){ c.classList.toggle('is-on', k===n); });
+    t.textContent=copy[n][0]; p.textContent=copy[n][1];
+  }
+  function tick(){ if(!paused) show((i+1)%cards.length); }
+  cards.forEach(function(c){
+    c.addEventListener('click', function(){ show(+c.dataset.i); restart(); });
+    c.addEventListener('focus', function(){ show(+c.dataset.i); });
+  });
+  row.addEventListener('mouseenter', function(){ paused=true; });
+  row.addEventListener('mouseleave', function(){ paused=false; });
+  function restart(){ if(timer) clearInterval(timer); if(!still) timer=setInterval(tick,4200); }
+  if(!still){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ restart(); io.disconnect(); } });
+    },{threshold:.35});
+    io.observe(row);
+  }
+})();
+</script>
 </body>
 </html>
